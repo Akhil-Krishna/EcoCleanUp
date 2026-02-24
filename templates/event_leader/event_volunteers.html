@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Event Volunteers{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{{ url_for('leader_events') }}" class="btn btn-eco-outline btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Back to Events
+    </a>
+</div>
+
+<div class="eco-page-header">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+            <h2><i class="bi bi-people me-2"></i>Registered Volunteers</h2>
+            <p class="subtitle mb-0">{{ event[0] }} — {{ event[1].strftime('%d %B %Y') if event[1] else '' }}</p>
+        </div>
+        {% if session.get('role') == 'event_leader' %}
+        <form method="POST" action="{{ url_for('send_reminder', event_id=event_id) }}">
+            <button type="submit" class="btn btn-eco-accent">
+                <i class="bi bi-bell me-1"></i>Send Reminder to All
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+{% if volunteers %}
+<div class="eco-card">
+    <div class="table-responsive">
+        <table class="table table-hover eco-table mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Registered</th>
+                    {% if session.get('role') in ('event_leader', 'admin') %}<th>Actions</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for i, v in enumerate(volunteers) %}
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td class="fw-600">{{ v[2] }}</td>
+                    <td>{{ v[3] }}</td>
+                    <td>{{ v[4] or '—' }}</td>
+                    <td><span class="badge badge-{{ v[5] or 'registered' }}">{{ (v[5] or 'registered').title() }}</span></td>
+                    <td><small>{{ v[6].strftime('%d %b %Y') if v[6] else '' }}</small></td>
+                    {% if session.get('role') in ('event_leader', 'admin') %}
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{{ url_for('participation_history', user_id=v[1]) }}" class="btn btn-sm btn-eco-outline" title="View History">
+                                <i class="bi bi-clock-history"></i>
+                            </a>
+                            <form method="POST"
+                                  action="{{ url_for('remove_volunteer', event_id=event_id, volunteer_id=v[1]) }}"
+                                  data-confirm="Remove {{ v[2] }} from this event?">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Remove">
+                                    <i class="bi bi-person-x"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="eco-card p-5 text-center">
+    <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+    <h5 class="mt-3 text-muted">No volunteers registered yet</h5>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Make enumerate work in Jinja2
+</script>
+{% endblock %}

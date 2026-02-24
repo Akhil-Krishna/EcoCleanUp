@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Submit Feedback{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-3">
+    <div class="col-12 col-md-8 col-lg-6">
+        <div class="eco-page-header">
+            <h2><i class="bi bi-star-fill me-2"></i>Submit Feedback</h2>
+            <p class="subtitle mb-0">Share your experience for <strong>{{ event[0] }}</strong></p>
+        </div>
+
+        <div class="eco-card p-4">
+            <div class="p-3 bg-eco-pale rounded-eco mb-4">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-calendar-check text-eco-green fs-4"></i>
+                    <div>
+                        <h6 class="mb-0 fw-700">{{ event[0] }}</h6>
+                        <small class="text-muted">{{ event[1].strftime('%d %B %Y') if event[1] else '' }}</small>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ url_for('submit_feedback', event_id=event_id) }}">
+                <!-- Star Rating -->
+                <div class="mb-4">
+                    <label class="form-label fw-700">Your Rating <span class="text-danger">*</span></label>
+                    <div class="star-rating mb-1">
+                        {% for i in range(5, 0, -1) %}
+                        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" required>
+                        <label for="star{{ i }}" title="{{ i }} star{{ 's' if i != 1 else '' }}">&#9733;</label>
+                        {% endfor %}
+                    </div>
+                    <small class="text-muted">Click a star to rate this event</small>
+                </div>
+
+                <div class="mb-4">
+                    <label for="comments" class="form-label fw-700">Comments</label>
+                    <textarea class="form-control" id="comments" name="comments" rows="5"
+                              placeholder="Share your experience, suggestions, or highlights..."></textarea>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-eco px-4">
+                        <i class="bi bi-send me-1"></i>Submit Feedback
+                    </button>
+                    <a href="{{ url_for('participation_history') }}" class="btn btn-eco-outline px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

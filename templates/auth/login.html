@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+    <div class="col-12 col-sm-10 col-md-7 col-lg-5">
+        <div class="eco-auth-card">
+            <div class="text-center mb-4">
+                <div class="eco-auth-logo mb-2">
+                    <i class="bi bi-tree-fill"></i>
+                </div>
+                <h2 class="fw-700" style="color: var(--eco-green);">Welcome Back</h2>
+                <p class="text-muted">Sign in to EcoCleanUp Hub</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('login') }}" novalidate>
+                <div class="mb-3">
+                    <label for="username" class="form-label fw-600">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0" style="border: 2px solid var(--eco-border); border-right: none; border-radius: 10px 0 0 10px;">
+                            <i class="bi bi-person text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0 ps-0" id="username" name="username"
+                               placeholder="Enter your username" required autocomplete="username"
+                               style="border-left: none; border-radius: 0 10px 10px 0;">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="form-label fw-600">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0" style="border: 2px solid var(--eco-border); border-right: none; border-radius: 10px 0 0 10px;">
+                            <i class="bi bi-lock text-muted"></i>
+                        </span>
+                        <input type="password" class="form-control border-start-0 ps-0" id="password" name="password"
+                               placeholder="Enter your password" required autocomplete="current-password"
+                               style="border-left: none; border-radius: 0 10px 10px 0;">
+                        <button class="btn btn-outline-secondary border-0" type="button" id="togglePwd"
+                                style="border: 2px solid var(--eco-border) !important; border-left: none !important; border-radius: 0 10px 10px 0 !important;"
+                                onclick="togglePassword('password', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-eco w-100 py-2 mb-3 fs-5">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                </button>
+
+                <div class="text-center">
+                    <p class="text-muted mb-0">Don't have an account?
+                        <a href="{{ url_for('register') }}" class="text-decoration-none fw-700" style="color: var(--eco-green);">
+                            Register as Volunteer
+                        </a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info box -->
+        <div class="eco-card p-3 mt-3 text-center">
+            <small class="text-muted">
+                <i class="bi bi-info-circle me-1 text-eco-green"></i>
+                All users (volunteers, event leaders, and admins) use the same login form.
+            </small>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(fieldId, btn) {
+    const field = document.getElementById(fieldId);
+    const icon = btn.querySelector('i');
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.className = 'bi bi-eye-slash';
+    } else {
+        field.type = 'password';
+        icon.className = 'bi bi-eye';
+    }
+}
+</script>
+{% endblock %}

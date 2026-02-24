@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Record Event Outcomes{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <h2><i class="bi bi-bar-chart-fill me-2"></i>Record Event Outcomes</h2>
+    <p class="subtitle mb-0">{{ event[0] }} — {{ event[1].strftime('%d %B %Y') if event[1] else '' }}</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-7">
+        <div class="eco-card p-4">
+            {% if existing_outcome %}
+            <div class="alert alert-info py-2 mb-3 small">
+                <i class="bi bi-info-circle me-1"></i>
+                Outcomes already recorded. You can update them below.
+            </div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('record_outcomes', event_id=event_id) }}">
+                <div class="row g-4">
+                    <div class="col-md-4 text-center">
+                        <div class="eco-stat-card">
+                            <i class="bi bi-people-fill text-eco-green fs-2 mb-2 d-block"></i>
+                            <label for="num_attendees" class="form-label fw-600">Number of Attendees</label>
+                            <input type="number" class="form-control text-center fw-700 fs-4" id="num_attendees"
+                                   name="num_attendees" min="0"
+                                   value="{{ existing_outcome[2] if existing_outcome else 0 }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="eco-stat-card" style="border-left-color: var(--eco-accent);">
+                            <i class="bi bi-trash2-fill text-eco-green fs-2 mb-2 d-block"></i>
+                            <label for="bags_collected" class="form-label fw-600">Rubbish Bags Collected</label>
+                            <input type="number" class="form-control text-center fw-700 fs-4" id="bags_collected"
+                                   name="bags_collected" min="0"
+                                   value="{{ existing_outcome[3] if existing_outcome else 0 }}">
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="eco-stat-card" style="border-left-color: #0dcaf0;">
+                            <i class="bi bi-recycle text-eco-green fs-2 mb-2 d-block"></i>
+                            <label for="recyclables_sorted" class="form-label fw-600">Recyclables Sorted (kg)</label>
+                            <input type="number" class="form-control text-center fw-700 fs-4" id="recyclables_sorted"
+                                   name="recyclables_sorted" min="0"
+                                   value="{{ existing_outcome[4] if existing_outcome else 0 }}">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label for="other_achievements" class="form-label fw-600">Other Achievements</label>
+                        <textarea class="form-control" id="other_achievements" name="other_achievements" rows="3"
+                                  placeholder="Describe any other notable achievements, special finds, wildlife observed...">{{ existing_outcome[5] if existing_outcome else '' }}</textarea>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-eco px-4">
+                        <i class="bi bi-check2-circle me-1"></i>
+                        {{ 'Update' if existing_outcome else 'Record' }} Outcomes
+                    </button>
+                    <a href="{{ url_for('leader_events') }}" class="btn btn-eco-outline px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

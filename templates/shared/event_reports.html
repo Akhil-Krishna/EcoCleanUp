@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Event Reports{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <h2><i class="bi bi-bar-chart-fill me-2"></i>Event Reports</h2>
+    <p class="subtitle mb-0">
+        {% if session.get('role') == 'admin' %}Platform-wide event performance{% else %}Reports for your events{% endif %}
+    </p>
+</div>
+
+{% if reports %}
+<div class="eco-card">
+    <div class="table-responsive">
+        <table class="table table-hover eco-table mb-0">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Registered</th>
+                    <th>Attended</th>
+                    <th>Bags</th>
+                    <th>Recyclables</th>
+                    <th>Avg Rating</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reports %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('event_detail', event_id=r[0]) }}" class="fw-600 text-decoration-none" style="color: var(--eco-green);">
+                            {{ r[1] }}
+                        </a>
+                    </td>
+                    <td>{{ r[2].strftime('%d %b %Y') if r[2] else '' }}</td>
+                    <td>{{ r[3] }}</td>
+                    <td><span class="badge badge-{{ r[4] }}">{{ r[4].title() }}</span></td>
+                    <td>{{ r[5] or 0 }}</td>
+                    <td>{{ r[6] or 0 }}</td>
+                    <td>
+                        {% if r[7] %}
+                        <span class="badge bg-eco-pale text-eco-green fw-700">{{ r[7] }}</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if r[8] %}
+                        <span class="badge bg-eco-pale text-eco-green fw-700">{{ r[8] }} kg</span>
+                        {% else %}—{% endif %}
+                    </td>
+                    <td>
+                        {% if r[10] %}
+                        <span class="text-warning fw-700">
+                            {{ '%.1f'|format(r[10]) }}
+                            <i class="bi bi-star-fill" style="font-size: 0.8rem;"></i>
+                        </span>
+                        {% else %}—{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="eco-card p-5 text-center">
+    <i class="bi bi-bar-chart text-muted" style="font-size: 3rem;"></i>
+    <h5 class="mt-3 text-muted">No report data available yet</h5>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Participation History{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h2><i class="bi bi-clock-history me-2"></i>Participation History</h2>
+            <p class="subtitle mb-0">
+                {% if viewing_self %}Your past events and attendance{% else %}History for {{ user_name }}{% endif %}
+            </p>
+        </div>
+        {% if viewing_self %}
+        <a href="{{ url_for('browse_events') }}" class="btn btn-eco-accent">
+            <i class="bi bi-search me-1"></i>Find Events
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% if history %}
+<div class="eco-card">
+    <div class="table-responsive">
+        <table class="table table-hover eco-table mb-0">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Type</th>
+                    <th>Attendance</th>
+                    <th>Feedback</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in history %}
+                {% set ev_id, ev_name, ev_date, ev_loc, ev_type, attendance, reg_at, rating = h %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('event_detail', event_id=ev_id) }}" class="fw-600 text-decoration-none" style="color: var(--eco-green);">
+                            {{ ev_name }}
+                        </a>
+                    </td>
+                    <td>{{ ev_date.strftime('%d %b %Y') if ev_date else '' }}</td>
+                    <td>{{ ev_loc }}</td>
+                    <td>{{ ev_type or '—' }}</td>
+                    <td>
+                        <span class="badge badge-{{ attendance or 'registered' }}">
+                            {{ (attendance or 'registered').title() }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if attendance == 'attended' %}
+                            {% if rating %}
+                            <span class="text-warning">
+                                {% for i in range(rating) %}<i class="bi bi-star-fill" style="font-size: 12px;"></i>{% endfor %}
+                                {% for i in range(5 - rating) %}<i class="bi bi-star" style="font-size: 12px;"></i>{% endfor %}
+                            </span>
+                            {% elif viewing_self %}
+                            <a href="{{ url_for('submit_feedback', event_id=ev_id) }}" class="btn btn-sm btn-eco py-0">
+                                <i class="bi bi-star me-1"></i>Submit
+                            </a>
+                            {% else %}
+                            <span class="text-muted small">No feedback</span>
+                            {% endif %}
+                        {% else %}
+                        <span class="text-muted small">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="eco-card p-5 text-center">
+    <i class="bi bi-calendar-x text-muted" style="font-size: 3rem;"></i>
+    <h5 class="mt-3 text-muted">No participation history yet</h5>
+    {% if viewing_self %}
+    <a href="{{ url_for('browse_events') }}" class="btn btn-eco mt-2">Browse Events</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

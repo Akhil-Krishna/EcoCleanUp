@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Volunteer Dashboard{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <h2><i class="bi bi-house-heart me-2"></i>Welcome, {{ session.get('full_name', 'Volunteer').split()[0] }}!</h2>
+    <p class="subtitle mb-0">Your EcoCleanUp volunteer dashboard</p>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="eco-stat-card">
+            <div class="stat-value text-eco-green">{{ total_attended }}</div>
+            <div class="stat-label">Events Attended</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="eco-stat-card" style="border-left-color: var(--eco-accent);">
+            <div class="stat-value" style="color: var(--eco-accent);">{{ upcoming|length }}</div>
+            <div class="stat-label">Upcoming Registrations</div>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Events -->
+<div class="eco-card mb-3">
+    <div class="eco-card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>My Upcoming Events</h5>
+        <a href="{{ url_for('browse_events') }}" class="btn btn-sm btn-light fw-600">Browse All</a>
+    </div>
+    <div class="p-3">
+        {% if upcoming %}
+        <div class="table-responsive">
+            <table class="table table-hover eco-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ev in upcoming %}
+                    <tr>
+                        <td class="fw-600">{{ ev[1] }}</td>
+                        <td>{{ ev[2].strftime('%d %b %Y') if ev[2] else '' }}</td>
+                        <td>{{ ev[3].strftime('%H:%M') if ev[3] else '' }}</td>
+                        <td>{{ ev[4] }}</td>
+                        <td><span class="badge badge-{{ ev[5] }}">{{ ev[5].title() }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center p-4 text-muted">
+            <i class="bi bi-calendar-plus fs-2 d-block mb-2"></i>
+            No upcoming events. <a href="{{ url_for('browse_events') }}" class="text-decoration-none fw-700" style="color: var(--eco-green);">Browse events to register!</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="{{ url_for('browse_events') }}" class="text-decoration-none">
+            <div class="eco-feature-card">
+                <div class="eco-feature-icon"><i class="bi bi-search"></i></div>
+                <h6 class="fw-700">Find Events</h6>
+                <p class="text-muted small mb-0">Browse and register for cleanup events near you.</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('participation_history') }}" class="text-decoration-none">
+            <div class="eco-feature-card">
+                <div class="eco-feature-icon"><i class="bi bi-clock-history"></i></div>
+                <h6 class="fw-700">My History</h6>
+                <p class="text-muted small mb-0">View your past events and attendance record.</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('edit_profile') }}" class="text-decoration-none">
+            <div class="eco-feature-card">
+                <div class="eco-feature-icon"><i class="bi bi-person-gear"></i></div>
+                <h6 class="fw-700">Edit Profile</h6>
+                <p class="text-muted small mb-0">Update your personal details and interests.</p>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

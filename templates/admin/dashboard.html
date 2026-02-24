@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <h2><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h2>
+    <p class="subtitle mb-0">Platform-wide overview and statistics for GreenSteps Initiative</p>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-4 col-xl-2">
+        <div class="eco-stat-card">
+            <div class="stat-value">{{ total_volunteers }}</div>
+            <div class="stat-label"><i class="bi bi-person me-1"></i>Volunteers</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <div class="eco-stat-card" style="border-left-color: #0dcaf0;">
+            <div class="stat-value" style="color: #0dcaf0;">{{ total_leaders }}</div>
+            <div class="stat-label"><i class="bi bi-person-badge me-1"></i>Leaders</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <div class="eco-stat-card" style="border-left-color: var(--eco-accent);">
+            <div class="stat-value" style="color: var(--eco-accent);">{{ total_events }}</div>
+            <div class="stat-label"><i class="bi bi-calendar3 me-1"></i>Events</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <div class="eco-stat-card" style="border-left-color: #6f42c1;">
+            <div class="stat-value" style="color: #6f42c1;">{{ total_registrations }}</div>
+            <div class="stat-label"><i class="bi bi-person-check me-1"></i>Registrations</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <div class="eco-stat-card" style="border-left-color: #fd7e14;">
+            <div class="stat-value" style="color: #fd7e14;">{{ total_feedback }}</div>
+            <div class="stat-label"><i class="bi bi-chat-square-text me-1"></i>Feedback</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <div class="eco-stat-card" style="border-left-color: #ffc107;">
+            <div class="stat-value" style="color: #ffc107;">{{ avg_rating }}</div>
+            <div class="stat-label"><i class="bi bi-star-fill me-1"></i>Avg Rating</div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <a href="{{ url_for('admin_users') }}" class="text-decoration-none">
+            <div class="eco-feature-card">
+                <div class="eco-feature-icon"><i class="bi bi-people"></i></div>
+                <h6 class="fw-700">Manage Users</h6>
+                <p class="text-muted small mb-0">View, search, and manage all user accounts.</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{{ url_for('admin_events') }}" class="text-decoration-none">
+            <div class="eco-feature-card">
+                <div class="eco-feature-icon"><i class="bi bi-calendar-event"></i></div>
+                <h6 class="fw-700">All Events</h6>
+                <p class="text-muted small mb-0">View and manage all cleanup events.</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{{ url_for('event_reports') }}" class="text-decoration-none">
+            <div class="eco-feature-card">
+                <div class="eco-feature-icon"><i class="bi bi-bar-chart-line"></i></div>
+                <h6 class="fw-700">Event Reports</h6>
+                <p class="text-muted small mb-0">Review attendance and engagement reports.</p>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 col-6">
+        <a href="{{ url_for('browse_events') }}" class="text-decoration-none">
+            <div class="eco-feature-card">
+                <div class="eco-feature-icon"><i class="bi bi-search"></i></div>
+                <h6 class="fw-700">Browse Events</h6>
+                <p class="text-muted small mb-0">View all upcoming cleanup events.</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- Summary Banner -->
+<div class="rounded-4 p-4" style="background: linear-gradient(135deg, var(--eco-green) 0%, var(--eco-green-light) 100%); color: white;">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h5 class="fw-700 mb-1"><i class="bi bi-graph-up-arrow me-2"></i>Platform Summary</h5>
+            <p class="mb-0 opacity-85">
+                EcoCleanUp Hub has <strong>{{ total_volunteers }}</strong> active volunteers,
+                <strong>{{ total_leaders }}</strong> event leaders, and <strong>{{ total_events }}</strong> total events
+                with an average event rating of <strong>{{ avg_rating }} ★</strong>.
+            </p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a href="{{ url_for('event_reports') }}" class="btn btn-light fw-700" style="color: var(--eco-green);">
+                <i class="bi bi-file-earmark-bar-graph me-1"></i>View Full Reports
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Participation History{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <h2><i class="bi bi-people-fill me-2"></i>Volunteer Participation History</h2>
+    <p class="subtitle mb-0">All volunteer participation across your events</p>
+</div>
+
+{% if history %}
+<div class="eco-card">
+    <div class="table-responsive">
+        <table class="table table-hover eco-table mb-0">
+            <thead>
+                <tr>
+                    <th>Volunteer</th>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Attendance</th>
+                    <th>Registered</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for h in history %}
+                <tr>
+                    <td class="fw-600">{{ h[0] }}</td>
+                    <td>{{ h[1] }}</td>
+                    <td>{{ h[2].strftime('%d %b %Y') if h[2] else '' }}</td>
+                    <td><span class="badge badge-{{ h[3] or 'registered' }}">{{ (h[3] or 'registered').title() }}</span></td>
+                    <td><small class="text-muted">{{ h[4].strftime('%d %b %Y') if h[4] else '' }}</small></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="eco-card p-5 text-center">
+    <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+    <h5 class="mt-3 text-muted">No participation history yet</h5>
+</div>
+{% endif %}
+{% endblock %}

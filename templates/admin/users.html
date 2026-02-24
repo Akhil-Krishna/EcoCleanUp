@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <h2><i class="bi bi-people-fill me-2"></i>Manage Users</h2>
+    <p class="subtitle mb-0">Search, view, and manage all platform users</p>
+</div>
+
+<!-- Search & Filter -->
+<div class="eco-card p-3 mb-4">
+    <form method="GET" action="{{ url_for('admin_users') }}" class="row g-2 align-items-end">
+        <div class="col-12 col-md-4">
+            <label class="form-label fw-600 small">Search by Name or Username</label>
+            <input type="text" class="form-control form-control-sm" name="search"
+                   value="{{ search }}" placeholder="Search users...">
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label fw-600 small">Filter by Role</label>
+            <select class="form-select form-select-sm" name="role">
+                <option value="">All Roles</option>
+                <option value="volunteer" {% if filter_role == 'volunteer' %}selected{% endif %}>Volunteer</option>
+                <option value="event_leader" {% if filter_role == 'event_leader' %}selected{% endif %}>Event Leader</option>
+                <option value="admin" {% if filter_role == 'admin' %}selected{% endif %}>Admin</option>
+            </select>
+        </div>
+        <div class="col-6 col-md-3">
+            <label class="form-label fw-600 small">Filter by Status</label>
+            <select class="form-select form-select-sm" name="status">
+                <option value="">All Statuses</option>
+                <option value="active" {% if filter_status == 'active' %}selected{% endif %}>Active</option>
+                <option value="inactive" {% if filter_status == 'inactive' %}selected{% endif %}>Inactive</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-eco btn-sm flex-fill">
+                <i class="bi bi-search me-1"></i>Search
+            </button>
+            <a href="{{ url_for('admin_users') }}" class="btn btn-eco-outline btn-sm flex-fill">
+                <i class="bi bi-x"></i>
+            </a>
+        </div>
+    </form>
+</div>
+
+{% if users %}
+<div class="eco-card">
+    <div class="table-responsive">
+        <table class="table table-hover eco-table mb-0">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i, u in enumerate(users) %}
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td class="fw-600">{{ u[2] }}</td>
+                    <td><span class="badge bg-eco-pale text-eco-green">{{ u[1] }}</span></td>
+                    <td>{{ u[3] }}</td>
+                    <td>
+                        <span class="badge {% if u[4] == 'admin' %}bg-danger{% elif u[4] == 'event_leader' %}bg-primary{% else %}bg-success{% endif %}">
+                            {{ u[4].replace('_', ' ').title() }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge {% if u[5] == 'active' %}bg-success{% else %}bg-secondary{% endif %}">
+                            {{ u[5].title() }}
+                        </span>
+                    </td>
+                    <td><small class="text-muted">{{ u[6].strftime('%d %b %Y') if u[6] else '' }}</small></td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="{{ url_for('admin_view_user', user_id=u[0]) }}"
+                               class="btn btn-sm btn-eco-outline" title="View Profile">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <form method="POST" action="{{ url_for('toggle_user_status', user_id=u[0]) }}"
+                                  data-confirm="{% if u[5] == 'active' %}Deactivate{% else %}Activate{% endif %} {{ u[2] }}?">
+                                <button type="submit"
+                                        class="btn btn-sm {% if u[5] == 'active' %}btn-warning{% else %}btn-success{% endif %}"
+                                        title="{% if u[5] == 'active' %}Deactivate{% else %}Activate{% endif %}">
+                                    <i class="bi bi-{% if u[5] == 'active' %}toggle-off{% else %}toggle-on{% endif %}"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="p-3 border-top">
+        <small class="text-muted">Showing {{ users|length }} user{{ 's' if users|length != 1 else '' }}</small>
+    </div>
+</div>
+{% else %}
+<div class="eco-card p-5 text-center">
+    <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+    <h5 class="mt-3 text-muted">No users found</h5>
+    <p class="text-muted">Try adjusting your search or filters.</p>
+</div>
+{% endif %}
+{% endblock %}

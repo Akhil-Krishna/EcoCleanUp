@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Track Attendance{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <h2><i class="bi bi-clipboard-check me-2"></i>Track Attendance</h2>
+    <p class="subtitle mb-0">{{ event[0] }} — {{ event[1].strftime('%d %B %Y') if event[1] else '' }}</p>
+</div>
+
+<div class="eco-card p-4">
+    {% if volunteers %}
+    <form method="POST" action="{{ url_for('track_attendance', event_id=event_id) }}">
+        <div class="table-responsive">
+            <table class="table table-hover eco-table mb-4">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Volunteer Name</th>
+                        <th>Email</th>
+                        <th>Attendance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i, v in enumerate(volunteers) %}
+                    <tr>
+                        <td>{{ i + 1 }}</td>
+                        <td class="fw-600">{{ v[1] }}</td>
+                        <td>{{ v[2] }}</td>
+                        <td>
+                            <select name="attendance_{{ v[0] }}" class="form-select form-select-sm" style="width: auto;">
+                                {% for status in ['registered', 'attended', 'absent', 'cancelled'] %}
+                                <option value="{{ status }}" {% if v[3] == status %}selected{% endif %}>
+                                    {{ status.title() }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-eco px-4">
+                <i class="bi bi-check2-all me-1"></i>Save Attendance
+            </button>
+            <a href="{{ url_for('leader_events') }}" class="btn btn-eco-outline px-4">Back</a>
+        </div>
+    </form>
+    {% else %}
+    <div class="text-center py-4 text-muted">
+        <i class="bi bi-people fs-2 d-block mb-2"></i>
+        No volunteers registered for this event.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

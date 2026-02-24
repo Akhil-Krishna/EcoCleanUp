@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+<div class="eco-page-header">
+    <h2><i class="bi bi-pencil-square me-2"></i>Edit Event</h2>
+    <p class="subtitle mb-0">Update event details</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-9">
+        <div class="eco-card p-4">
+            <form method="POST" action="{{ url_for('edit_event', event_id=event[0]) }}" novalidate>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-8">
+                        <label for="event_name" class="form-label fw-600">Event Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="event_name" name="event_name" value="{{ event[1] }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="event_type" class="form-label fw-600">Event Type</label>
+                        <select class="form-select" id="event_type" name="event_type">
+                            <option value="">Select type...</option>
+                            {% for t in ['Beach Cleanup', 'River Cleanup', 'Lake Cleanup', 'Park Cleanup', 'Tree Planting', 'Dune Restoration', 'Habitat Restoration', 'Coastal Cleanup', 'Urban Cleanup', 'Waterway Cleanup', 'Other'] %}
+                            <option value="{{ t }}" {% if event[5] == t %}selected{% endif %}>{{ t }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="location" class="form-label fw-600">Location <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="location" name="location" value="{{ event[4] }}" required>
+                    </div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <label for="event_date" class="form-label fw-600">Date <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" id="event_date" name="event_date"
+                               value="{{ event[6].strftime('%Y-%m-%d') if event[6] else '' }}" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="start_time" class="form-label fw-600">Start Time</label>
+                        <input type="time" class="form-control" id="start_time" name="start_time"
+                               value="{{ event[7].strftime('%H:%M') if event[7] else '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_time" class="form-label fw-600">End Time</label>
+                        <input type="time" class="form-control" id="end_time" name="end_time"
+                               value="{{ event[8].strftime('%H:%M') if event[8] else '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="duration" class="form-label fw-600">Duration (hours)</label>
+                        <input type="number" class="form-control" id="duration" name="duration"
+                               value="{{ event[9] or '' }}" min="0.5" step="0.5">
+                    </div>
+                </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <label for="status" class="form-label fw-600">Event Status</label>
+                        <select class="form-select" id="status" name="status">
+                            {% for s in ['upcoming', 'ongoing', 'completed', 'cancelled'] %}
+                            <option value="{{ s }}" {% if event[12] == s %}selected{% endif %}>{{ s.title() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="description" class="form-label fw-600">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ event[10] or '' }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="supplies" class="form-label fw-600">Supplies</label>
+                        <textarea class="form-control" id="supplies" name="supplies" rows="2">{{ event[11] or '' }}</textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="safety_instructions" class="form-label fw-600">Safety Instructions</label>
+                        <textarea class="form-control" id="safety_instructions" name="safety_instructions" rows="2">{{ event[13] or '' }}</textarea>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-eco px-4">
+                        <i class="bi bi-check2 me-1"></i>Save Changes
+                    </button>
+                    <a href="{{ url_for('leader_events') }}" class="btn btn-eco-outline px-4">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
