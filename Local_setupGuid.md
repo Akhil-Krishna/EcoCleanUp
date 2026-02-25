@@ -5,6 +5,12 @@ You must create the database first.
 ---
 # ✅ Correct Order (Very Important)
 
+## 0. **Clone the repository:**
+   ```bash
+   git clone https://github.com/[your-username]/EcoCleanUp.git
+   cd EcoCleanUp
+   ```
+   
 ## 1. create .venv
 
 Run:
