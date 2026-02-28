@@ -88,26 +88,14 @@ psql -U postgres -d ecocleanup_db -f populate_database.sql
 
 ---
 
-# ✅ Why This Happened
 
-Your command was:
-
-```bash
-psql -U postgres -d ecocleanup_db -f create_database.sql
-```
-
-But PostgreSQL said:
-
-> I can’t connect to ecocleanup_db because it doesn’t exist.
-
-So you must create it first from another database (usually `postgres`).
-
----
 
 # 🎯 After That
 
 Update your `connect.py` for local:
 
+
+if you have python 3.11 , and psycopg2
 ```python
 def get_connection():
     import psycopg2
@@ -121,7 +109,30 @@ def get_connection():
     return conn
 ```
 
+if you have python 3.13+ , and psycopg3
+
+```
+import psycopg
+
+def get_connection():
+    conn = psycopg.connect(
+        host="localhost",
+        port=5432,
+        dbname="ecocleanup_db",
+        user="postgres",
+        password="root",
+    )
+    return conn
+
+```
+
 ---
+
+# run
+
+```
+python app.py
+```
 
 # 🚀 Quick Check
 
